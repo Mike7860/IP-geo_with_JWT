@@ -7,31 +7,35 @@ from .models import LocationDatasByIp
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication, BasicAuthentication
 from .serializers import IpGeoSerializer
 from rest_framework import status
+from rest_framework import generics
+from rest_framework import mixins
 import requests
 
 #hardcoded datas
-key = "766ff3035ba594d83ad175ca7876a1aa"
+key = ""
 ip = "109.206.193.138"
 url = "http://api.ipstack.com/" + ip + "?access_key=" + key
 response = requests.get(url).json()
 print(response)
 
-class ReadOnly(BasePermission):
-    def has_permission(self, request, view):
-        return request.method in SAFE_METHODS
+# class ReadOnly(BasePermission):
+#     def has_permission(self, request, view):
+#         return request.method in SAFE_METHODS
 
 class HelloView(APIView):
    # permission_classes = (IsAuthenticated, ReadOnly)
-    key = "766ff3035ba594d83ad175ca7876a1aa"
+    key = ""
     ip = "109.206.193.138"
     url = "http://api.ipstack.com/" + ip + "?access_key=" + key
     response = requests.get(url).json()
 
+
     def get(self, request):
         #content = {'message': 'Hello, World!'}
-        key = "766ff3035ba594d83ad175ca7876a1aa"
+        key = ""
         ip = "109.206.193.138"
         url = "http://api.ipstack.com/" + ip + "?access_key=" + key
         response = requests.get(url).json()
@@ -46,34 +50,43 @@ class HelloView(APIView):
 # capital = models.CharField(max_length=200)
 
 
-class DisplayDatas(APIView):
-    @csrf_exempt
+class DisplayDatas(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    #authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # parser_classes = [JSONParser]
+
+    serializer_class = IpGeoSerializer
+    queryset = LocationDatasByIp.objects.all()
+
+    #@csrf_exempt
     def get(self, request):
-        #if request.method == "GET":
-        items = LocationDatasByIp.objects.all()
-        serializer = IpGeoSerializer(items, many=True)
-        #if serializer.is_valid():
-        return Response(serializer.data)
+        # #if request.method == "GET":
+        # items = LocationDatasByIp.objects.all()
+        # serializer = IpGeoSerializer(items, many=True)
+        # #if serializer.is_valid():
+        # #return Response(serializer.data)
+        return self.list(request)
 
 #class AddDatas(APIView):
-    @csrf_exempt
+    #@csrf_exempt
     def post(self, request):
-        serializer = IpGeoSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # serializer = IpGeoSerializer(data=request.data)
+        #
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request=request)
 
 class DatasDetail(APIView):
-    @csrf_exempt
+    #@csrf_exempt
     def get_object(self, ip):
         try:
             return LocationDatasByIp.objects.get(ip=ip)
         except LocationDatasByIp.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    @csrf_exempt
+    #@csrf_exempt
     def get(self, request, ip):
         #if request.method == "GET":
         item = self.get_object(ip)
@@ -81,7 +94,7 @@ class DatasDetail(APIView):
         #if serializer.is_valid():
         return Response(serializer.data)
 
-    @csrf_exempt
+    #@csrf_exempt
     def delete(self, request, ip):
         item = self.get_object(ip)
         item.delete()
