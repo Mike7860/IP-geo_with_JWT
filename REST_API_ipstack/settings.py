@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,10 @@ SECRET_KEY = 'g=p#oy1xldu4iy7=@nqw%h7^b5#7gx+2d87l6cq5#ux1w*y=+2'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+IPSTACK_APP_KEY = config('IPSTACK_APP_KEY', default='')
+
 
 # Application definition
 

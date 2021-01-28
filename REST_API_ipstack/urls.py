@@ -22,13 +22,9 @@ from ipstack_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HelloView.as_view(), name='hello'),
-
     path('display/', views.DisplayDatas.as_view(), name='hello'),
-    #path('add/', views.AddDatas.as_view(), name='hello'),
     path('detail/<ip>/', views.DatasDetail.as_view(), name='hello'),
-    #path('', include('ipstack_app.urls')),
     path('api-auth/', include('rest_framework.urls')),
-
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/repofresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]

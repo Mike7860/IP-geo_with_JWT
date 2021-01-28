@@ -12,6 +12,7 @@ from .serializers import IpGeoSerializer
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import mixins
+from django.conf import settings
 import requests
 
 #hardcoded datas
@@ -19,7 +20,6 @@ key = ""
 ip = "109.206.193.138"
 url = "http://api.ipstack.com/" + ip + "?access_key=" + key
 response = requests.get(url).json()
-print(response)
 
 # class ReadOnly(BasePermission):
 #     def has_permission(self, request, view):
@@ -27,30 +27,22 @@ print(response)
 
 class HelloView(APIView):
    # permission_classes = (IsAuthenticated, ReadOnly)
-    key = ""
+    key = settings.IPSTACK_APP_KEY
     ip = "109.206.193.138"
     url = "http://api.ipstack.com/" + ip + "?access_key=" + key
     response = requests.get(url).json()
 
 
     def get(self, request):
-        #content = {'message': 'Hello, World!'}
-        key = ""
+        key = settings.IPSTACK_APP_KEY
         ip = "109.206.193.138"
         url = "http://api.ipstack.com/" + ip + "?access_key=" + key
         response = requests.get(url).json()
+        print(response['ip'])
         return Response(response['ip'])
 
 
-# ip = models.CharField(max_length=200)
-# country_name = models.CharField(max_length=200)
-# city = models.CharField(max_length=200)
-# latitude = models.CharField(max_length=200)
-# longidute = models.CharField(max_length=200)
-# capital = models.CharField(max_length=200)
-
-
-class DisplayDatas(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+class DisplayDatas(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     #authentication_classes = [TokenAuthentication]
     # permission_classes = [IsAuthenticated]
     # parser_classes = [JSONParser]
@@ -60,23 +52,12 @@ class DisplayDatas(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
 
     #@csrf_exempt
     def get(self, request):
-        # #if request.method == "GET":
-        # items = LocationDatasByIp.objects.all()
-        # serializer = IpGeoSerializer(items, many=True)
-        # #if serializer.is_valid():
-        # #return Response(serializer.data)
         return self.list(request)
 
-#class AddDatas(APIView):
     #@csrf_exempt
     def post(self, request):
-        # serializer = IpGeoSerializer(data=request.data)
-        #
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return self.create(request=request)
+
 
 class DatasDetail(APIView):
     #@csrf_exempt
@@ -88,7 +69,6 @@ class DatasDetail(APIView):
 
     #@csrf_exempt
     def get(self, request, ip):
-        #if request.method == "GET":
         item = self.get_object(ip)
         serializer = IpGeoSerializer(item)
         #if serializer.is_valid():
@@ -99,12 +79,3 @@ class DatasDetail(APIView):
         item = self.get_object(ip)
         item.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-#
-# class RemoveDatas(APIView):
-#     @csrf_exempt
-#     def delete(self, request, id):
-#         item = self.get_object(id)
-#         item.delete()
-#         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
