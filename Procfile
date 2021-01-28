@@ -3,8 +3,8 @@
     release: python manage.py createsuperuser
     release: example
     release: example@example.com
-    release: qwerty123456
-    release: qwerty123456
+    release:
+    release:
 
 
 
