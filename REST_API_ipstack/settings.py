@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import django_heroku
+import os
 from pathlib import Path
 from decouple import config
 
@@ -27,9 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 IPSTACK_APP_KEY = config('IPSTACK_APP_KEY', default='')
-
 
 # Application definition
 
@@ -56,15 +55,18 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    # 'DEFAULT_FILTER_BACKENDS': (
+    #     'django_filters.rest_framework.DjangoFilterBackend'
+    # ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication', ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',),
+        # 'DEFAULT_AUTHENTICATION_CLASSES': (
+        #     'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',),
+    # ),
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.MultiPartParser',
         'rest_framework.parsers.JSONParser',
@@ -138,3 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+django_heroku.settings(locals())

@@ -18,13 +18,17 @@ from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 #from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from ipstack_app import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HelloView.as_view(), name='hello'),
-    path('display/', views.DisplayDatas.as_view(), name='hello'),
-    path('detail/<ip>/', views.DatasDetail.as_view(), name='hello'),
+    path('', views.DisplayDatas.as_view(), name='display_datas'),
+    path('<ip>/', views.DatasDetail.as_view(), name='datas_detail'),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/repofresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

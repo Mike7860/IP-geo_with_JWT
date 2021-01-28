@@ -21,26 +21,6 @@ ip = "109.206.193.138"
 url = "http://api.ipstack.com/" + ip + "?access_key=" + key
 response = requests.get(url).json()
 
-# class ReadOnly(BasePermission):
-#     def has_permission(self, request, view):
-#         return request.method in SAFE_METHODS
-
-class HelloView(APIView):
-   # permission_classes = (IsAuthenticated, ReadOnly)
-    key = settings.IPSTACK_APP_KEY
-    ip = "109.206.193.138"
-    url = "http://api.ipstack.com/" + ip + "?access_key=" + key
-    response = requests.get(url).json()
-
-
-    def get(self, request):
-        key = settings.IPSTACK_APP_KEY
-        ip = "109.206.193.138"
-        url = "http://api.ipstack.com/" + ip + "?access_key=" + key
-        response = requests.get(url).json()
-        print(response['ip'])
-        return Response(response['ip'])
-
 
 class DisplayDatas(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     #authentication_classes = [TokenAuthentication]
