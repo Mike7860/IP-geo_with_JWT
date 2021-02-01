@@ -15,12 +15,6 @@ from rest_framework import mixins
 from django.conf import settings
 import requests
 
-#hardcoded datas
-key = ""
-ip = "109.206.193.138"
-url = "http://api.ipstack.com/" + ip + "?access_key=" + key
-response = requests.get(url).json()
-
 
 class DisplayDatas(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
     #authentication_classes = [TokenAuthentication]
