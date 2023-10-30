@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g=p#oy1xldu4iy7=@nqw%h7^b5#7gx+2d87l6cq5#ux1w*y=+2'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mj-restful-api.herokuapp.com/']
+ALLOWED_HOSTS = ['*']
 
 IPSTACK_APP_KEY = config('IPSTACK_APP_KEY', default='')
 
